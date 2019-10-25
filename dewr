@@ -1,12 +1,31 @@
-#!/bin/sh -e
+#!/bin/bash
 #
 # dewr is a development wrapper
 
-IMAGE=$(docker build -q .)
+set -x 
 
-docker run --rm --net=host --privileged --interactive --tty --cpus="2" \
-  --hostname="host" \
-  --volume="$PWD:/app" \
-  --volume="$HOME:/home/user" \
-  --volume=/var/run/docker.sock:/var/run/docker.sock \
-  "$IMAGE"
+DOCKERFILE="Dockerfile.dev"
+
+#IMAGE=$(docker build -f Dockerfile.dev)
+export UID=$(id -u)
+export GID=$(id -g)
+export USERNAME=$(stat -c "%U" $(tty))
+
+
+if [[ $1 == "run" ]]; then 
+    docker run --rm --net=host --privileged --interactive --tty --cpus="2" \
+         --hostname="host" \
+         --volume="$HOME:/home/user" \
+         --volume="$PWD:/opt/app"    \
+         --volume=/var/run/docker.sock:/var/run/docker.sock \
+         "$IMAGE"
+elif [[ $1 ==  "build" ]]; then 
+    docker build -f Dockerfile.dev  \
+      --build-arg UID=$UID \
+      --build-arg GID=$GID \
+      --build-arg USERNAME=$USERNAME \
+      . \
+      
+else
+  echo "I can only run or build things"
+fi
