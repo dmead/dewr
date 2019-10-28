@@ -1,31 +1,27 @@
 #!/bin/bash
 #
 # dewr is a development wrapper
-
-set -x 
+# usage: 
+#     > dewr build
+#     > dewr run sh
 
 DOCKERFILE="Dockerfile.dev"
 
-#IMAGE=$(docker build -f Dockerfile.dev)
-export UID=$(id -u)
-export GID=$(id -g)
-export USERNAME=$(stat -c "%U" $(tty))
+export IMAGE_TAG=$(echo ${PWD//\//''} | awk '{print tolower($0)}')
 
-
-if [[ $1 == "run" ]]; then 
-    docker run --rm --net=host --privileged --interactive --tty --cpus="2" \
-         --hostname="host" \
-         --volume="$HOME:/home/user" \
-         --volume="$PWD:/opt/app"    \
-         --volume=/var/run/docker.sock:/var/run/docker.sock \
-         "$IMAGE"
+if [[ $1 == "run" ]]; then
+    docker run                       \
+         --rm                        \
+         --volume $(pwd):/opt/app    \
+         --privileged                \
+         -it $IMAGE_TAG              \
+         $2
 elif [[ $1 ==  "build" ]]; then 
-    docker build -f Dockerfile.dev  \
-      --build-arg UID=$UID \
-      --build-arg GID=$GID \
-      --build-arg USERNAME=$USERNAME \
-      . \
-      
+    docker build -f Dockerfile.dev   \
+      -t  "$IMAGE_TAG:latest"        \
+      .
+elif [[ $1 == "bash" ]]; then
+    dewr run bash
 else
   echo "I can only run or build things"
 fi
