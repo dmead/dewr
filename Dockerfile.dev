@@ -1,0 +1,9 @@
+FROM node:10.11-alpine
+
+RUN apk add git
+
+RUN npm install --global prettier
+
+RUN mkdir -p  /opt/app
+
+WORKDIR /opt/app

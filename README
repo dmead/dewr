@@ -1,7 +1,3 @@
-dewr is a development wrapper
+dewr is tool to help manage your development environment
+see the dewr file for instructions
 
-Requires these lines in an Ubuntu-based Dockerfile:
-
-    RUN useradd -m --uid 1000 user
-    USER user
-    WORKDIR /app
