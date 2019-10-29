@@ -1,6 +1,9 @@
-#!/bin/sh
+#!/bin/bash
 #
 # dewr is a development wrapper
+#  instllation:
+#   create a symlink to dewr in your path as such
+#   ln -s $(pwd)/dewr.sh /usr/local/bin/dewr
 # use case:
 #    1. you have a project checked out locally
 #    2. you want to drop into a stable enviroment for everything except
@@ -14,10 +17,10 @@
 # caveats:
 #      1. keep it simple. this is for running your compiler and
 #         running tools that you don't want to manage on each dev machine
-#      2. changes to your dockerfile require every to run dewr build
+#      2. changes to your dockerfile require every dev to run dewr build
 #         on their enviroments
 #      3. tested on MacOS which may have a different permissions model than
-#         linux or windows
+#         linux or windows. you may need to specify uid/gid explicitly in linux
 
 DOCKERFILE="Dockerfile.dev"
 
